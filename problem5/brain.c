@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "commands.h"
 
+int i = 1;
 void brain(unsigned short command)
 {
     /*
@@ -25,5 +26,24 @@ void brain(unsigned short command)
      * Make sure that you have no printf lines in your
      * final version.
      */
-    printf("0x%x\n", command);
+
+    // if you want to count calls to brain
+    // printf("%u\n", i);
+    // i++;
+    unsigned short function = command & 0xF000;
+    if (function == 0x8000) {
+        messageFound();
+    } else if (function == 0x4000) {
+	unsigned int C = command & 0x0FFF;
+	drillDown(C);
+    } else if (function == 0x2000) {
+	unsigned int D = command & 0x0FFF;
+	drillLeft(D);
+    } else if (function == 0x1000) {
+	unsigned int D = command & 0x0FFF;
+	drillRight(D);
+	// if you want to count drillRight calls
+	// printf("%u\n", i);
+	// i++;
+    }
 }
