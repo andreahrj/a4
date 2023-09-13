@@ -1,0 +1,1 @@
+./driver | wc -c | awk '{ print $1 / 4}'
