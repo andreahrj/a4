@@ -1,26 +1,35 @@
 #include <stdio.h>
 
 unsigned int number = 0;
-unsigned short high_signal = 0x0000;
-unsigned short low_signal = 0x0000;
 
 void print20bitNumber(unsigned short signal)
 {
+    /*
+     * Use high and low to create the 20 bit number and
+     * store it in the "number" variable.
+     * Then print it out as a desimal number.
+     * Keep in mind that this function is called
+     * twice for each number and you must only print
+     * a complete 20 bit number.
+     *
+     * high 16 bit:
+     * 1000-0000-HHHH-HHHH
+     *
+     * low 16 bit:
+     * 0100-LLLL-LLLL-LLLL
+     *
+     * Answer, 32 bit:
+     * 0000-0000-0000-HHHH-HHHH-LLLL-LLLL-LLLL
+     */
 
-    unsigned short top_bits = (signal & 0xF000);
-
-    if (top_bits == 0x8000) {
-        high_signal = signal & 0x0FFF;
-    } else if (top_bits == 0x4000) {
-        low_signal = signal & 0x0FFF;
-    }
-
-    if (high_signal && low_signal) {
-        number = ((unsigned int)high_signal << 8) | low_signal;
-        printf("%u\n", number);
-        number = 0;
-        high_signal = 0x0000;
-        low_signal = 0x0000;
-
+    unsigned short command = signal & 0xF000;
+    if (command == 0x8000) {
+        // HIGH
+	number = (signal & 0x00FF) << 12;
+    } else if (command == 0x4000) {
+        // LOW
+	number = (signal & 0x0FFF) | number;
+    	printf("%d\n", number);
+	number = 0;
     }
 }
